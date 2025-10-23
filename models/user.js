@@ -17,7 +17,7 @@ const userSchmema = new Schema({
   },
   salt: {
     type: String,
-    required: true
+    // required: true
   },
   profileImageURL: {
     type: String,
@@ -30,6 +30,8 @@ const userSchmema = new Schema({
   }
 }, { timestamps: true })
 
+
+
 userSchmema.pre('save', function (next) {
   const user = this;
   if (!user.isModified('password')) {
@@ -38,9 +40,9 @@ userSchmema.pre('save', function (next) {
   const salt = randomBytes(16).toString();
   const hashedPassword = createHmac('sha256', salt).update(user.password).digest('hex');
 
-this.salt = salt;
-this.password = hashedPassword;
-next();
+  this.salt = salt;
+  this.password = hashedPassword;
+  next();
 })
 
 const User = model("User", userSchmema);
